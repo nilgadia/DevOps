@@ -1,0 +1,744 @@
+Git and                                     GitHub
+Distributed version control sytem    Repository hosting services
+why shell command & what is this
+touch file.txt
+start .
+explorer .
+git init
+ls -la
+the folder name start with . is hidden by default 
+to see folder - view - options - view - show hidden file and folder and hide extenstions for know type file (windows)
+Basic shell command
+mkdir - make directory
+ls - list fie and directory
+ls -l and ls -la (a for hidden files)
+cd - change directory 
+. - Alis of the current directory
+.. - Alias of the parent directory
+pwd -print path of current directory
+nano - edit file (editor, others nanao) ^O Save changes + enter  ^X 
+clear - clear terminal 
+tab - autocomplete command
+echo = print the terminal
+man - help on specific command
+touch - craete new file
+> - write to the file 
+>> - append to the file
+cat - list contents of the file
+rm -  removes files and directories  -r -f
+open . - to open file
+, terminal how 
+
+
+How git works
+
+Create new repository
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project
+$ git init
+it will create hidden folder .git
+ls -la
+Initialized empty Git repository in E:/learning/version-control/git/repository/my-first-project/.git/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+
+$ ls -la
+total 4
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 ./
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:09 ../
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 .git/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ cd .git
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git (GIT_DIR!)
+$ ls -la
+total 11
+drwxr-xr-x 1 adeeva 197121   0 May 24 12:10 ./
+drwxr-xr-x 1 adeeva 197121   0 May 24 12:10 ../
+-rw-r--r-- 1 adeeva 197121 130 May 24 12:10 config
+-rw-r--r-- 1 adeeva 197121  73 May 24 12:10 description
+-rw-r--r-- 1 adeeva 197121  23 May 24 12:10 HEAD
+drwxr-xr-x 1 adeeva 197121   0 May 24 12:10 hooks/
+drwxr-xr-x 1 adeeva 197121   0 May 24 12:10 info/
+drwxr-xr-x 1 adeeva 197121   0 May 24 12:10 objects/
+drwxr-xr-x 1 adeeva 197121   0 May 24 12:10 refs/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git (GIT_DIR!)
+$ cat config
+[core]
+        repositoryformatversion = 0
+        filemode = false
+        bare = false
+        logallrefupdates = true
+        symlinks = false
+        ignorecase = true
+cat description		
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git (GIT_DIR!)
+$ cat HEAD
+ref: refs/heads/master
+
+Git object types
+Blob/Tree/Commit/Annotated Tag
+Blob - Git stores files
+Tree - Git store information about directory
+Commit - We can store verrsion of project
+Annotated Tag - pointer to specific commit
+
+let demonstrate Git low level command to create git object and understand how git works
+git hash-object
+git cat-file
+git mktree
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo "Hello, Git"
+Hello, Git
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo "Hello, Git" | git hash-object --stdin
+b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+
+check .git and object info/pack
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo "Hello, Git" | git hash-object --stdin -w     stdin - Take input fot standard input -w create git object
+
+b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+
+check .git and object info/pack/b7 (starting hash 2 character) folder name + file name = hashcode
+
+What is git hash
+man shasum
+echo 'Hello, Git' | shasum
+echo -n 'Hello, Git' | shasum
+
+'Hello, Git', Hello, Git
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ ls -la
+total 4
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 ./
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:09 ../
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 .git/
+
+No file yet.
+
+----
+json vs Git database
+git cat-file -p contents of the object
+git cat-file -t type of the object
+git cat-file -s size of the object
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -p b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+Hello, Git
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -t b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+blob
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -s b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+11
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ cd ..
+
+
+git hash-object filename -w
+create2 file out of git direcrory
+desktop>echo "Second file in Git repository" > new-file.txt
+git hash-object pwd file path -w
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ echo "Second file in Git repository" > new-file.txt
+copy to repository 
+git hash-object ../new file.txt
+git hash-object ../new file.txt -w
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ ls
+hello-world/  my-first-project/  new-file.txt  repo_1/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ cat new-file.txt
+Second file in Git repository
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ pwd
+/e/learning/version-control/git/repository
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ cd my-first-project/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git hash-object ../new-file.txt
+4400aae52a27341314f423095846b1f215a7cf08
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git hash-object ../new-file.txt -w
+warning: LF will be replaced by CRLF in ../new-file.txt.
+The file will have its original line endings in your working directory
+4400aae52a27341314f423095846b1f215a7cf08
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -p 4400aae52a27341314f423095846b1f215a7cf08
+Second file in Git repository
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -t 4400aae52a27341314f423095846b1f215a7cf08
+blob
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -s 4400aae52a27341314f423095846b1f215a7cf08
+30
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ ls -la
+total 4
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 ./
+drwxr-xr-x 1 adeeva 197121 0 May 25 02:48 ../
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 .git/
+no file yet
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ cd .git/objects
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git/objects (GIT_DIR!)
+$ ls -la
+total 4
+drwxr-xr-x 1 adeeva 197121 0 May 25 02:51 ./
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 ../
+drwxr-xr-x 1 adeeva 197121 0 May 25 02:51 44/
+drwxr-xr-x 1 adeeva 197121 0 May 24 14:27 b7/
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 info/
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 pack/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git/objects (GIT_DIR!)
+$ cd 44
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git/objects/44 (GIT_DIR!)
+$ ls -la
+total 1
+drwxr-xr-x 1 adeeva 197121  0 May 25 02:51 ./
+drwxr-xr-x 1 adeeva 197121  0 May 25 02:51 ../
+-r--r--r-- 1 adeeva 197121 46 May 25 02:51 00aae52a27341314f423095846b1f215a7cf08
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project/.git/objects/44 (GIT_DIR!)
+$ cat 00aae52a27341314f423095846b1f215a7cf08
+xK▒▒OR06NM▒▒KQH▒▒IU▒▒Sp▒,Q(J-▒/▒,▒/▒▒▒?          Binary
+
+Verify
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo "Hello, Git" | git hash-object --stdin
+b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -p b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+Hello, Git
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -t b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+blob
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -s b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+11
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo "blob 11\0Hello, Git"
+blob 11\0Hello, Git
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo -e "blob 11\0Hello, Git"
+blob 11\0Hello, Git
+
+Name of the file
+content of the file 
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo "blob 11\0Hello, Git" | shasum
+5fa6d9c54f3d2c4b6bb2b0e6ed71059a84fa7463 *-
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ echo -e "blob 11\0Hello, Git" | shasum
+b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e *-    \0 - escape character
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ find .git/objects -type f
+.git/objects/44/00aae52a27341314f423095846b1f215a7cf08
+.git/objects/b7/aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ cd ..
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ nano temp-tree.txt
+
+100644 blob b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e	file1.txt
+100644 blob 4400aae52a27341314f423095846b1f215a7cf08	file2.txt
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository
+$ cat temp-tree.txt
+100644 blob b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e    file1.txt
+100644 blob 4400aae52a27341314f423095846b1f215a7cf08    file2.txt
+
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ cat ../temp-tree.txt
+100644 blob b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e    file1.txt
+100644 blob 4400aae52a27341314f423095846b1f215a7cf08    file2.txt
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ cat ../temp-tree.txt | git mktree
+3b95df0ac6365c72e9b0ff6c449645c87e6e1159
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ rm ../temp-tree.txt
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ find .git/objects -type f
+.git/objects/3b/95df0ac6365c72e9b0ff6c449645c87e6e1159
+.git/objects/44/00aae52a27341314f423095846b1f215a7cf08
+.git/objects/b7/aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -p 3b95d
+100644 blob b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e    file1.txt
+100644 blob 4400aae52a27341314f423095846b1f215a7cf08    file2.txt
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -t 3b95d
+tree
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file -s 3b95d
+74
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git ls-files
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git ls-files -s
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ find .git/objects -type f
+.git/objects/3b/95df0ac6365c72e9b0ff6c449645c87e6e1159
+.git/objects/44/00aae52a27341314f423095846b1f215a7cf08
+.git/objects/b7/aec520dec0a7516c18eb4c68b64ae1eb9b5a5e
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git cat-file 3b95 -t
+tree
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git read-tree 3b95
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ ls -la
+total 4
+drwxr-xr-x 1 adeeva 197121 0 May 24 12:10 ./
+drwxr-xr-x 1 adeeva 197121 0 May 25 04:45 ../
+drwxr-xr-x 1 adeeva 197121 0 May 25 05:14 .git/
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git ls-files -s
+100644 b7aec520dec0a7516c18eb4c68b64ae1eb9b5a5e 0       file1.txt
+100644 4400aae52a27341314f423095846b1f215a7cf08 0       file2.txt
+o means file not changed between staging area and repository
+ls before working directory
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ git checkout-index -a
+
+adeeva@DESKTOP-9AA1MIA MINGW64 /e/learning/version-control/git/repository/my-first-project (master)
+$ ls
+file1.txt  file2.txt
+
+git status
+git commit -m "Initisla commit"
+git cat-file p
+---------------------------------
+Introduction
+
+This session is for to understand how git working internally and demonstrate usefull command
+though today life is easy because of somany tools available to market
+but still we need to know in depth to make our life easy
+Course
+
+What is git ?
+
+(Optional) Shell command
+Diffretnt area in git
+
+
+git init
+default it create master baranch
+analyze the directory structure
+add two file
+the add to index
+then commit
+analyze the directory structure
+we will now focus on object later we will discuss on other files
+
+Demonstrate how git work using low level command
+
+it ls-files -s
+unstage file using git rm
+
+diffrence git and github later
+
+
+git config -- global user,name 
+git config -- global user,email
+git list
+--------------------------------------------
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project
+$ git init
+Initialized empty Git repository in C:/Shahid/learning/git/first-project/.git/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ ls
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ ls -l
+total 0
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ ls -la
+total 4
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:01 ../
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 .git/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ cd .git
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ ls
+HEAD  config  description  hooks/  info/  objects/  refs/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ ls -l
+total 7
+-rw-r--r-- 1 shiqbal 1049089  23 Oct 19 20:03 HEAD
+-rw-r--r-- 1 shiqbal 1049089 130 Oct 19 20:03 config
+-rw-r--r-- 1 shiqbal 1049089  73 Oct 19 20:03 description
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 hooks/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 objects/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 refs/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ ls -l
+total 7
+-rw-r--r-- 1 shiqbal 1049089  23 Oct 19 20:03 HEAD
+-rw-r--r-- 1 shiqbal 1049089 130 Oct 19 20:03 config
+-rw-r--r-- 1 shiqbal 1049089  73 Oct 19 20:03 description
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 hooks/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 objects/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 refs/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ ls -la
+total 11
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 ../
+-rw-r--r-- 1 shiqbal 1049089  23 Oct 19 20:03 HEAD
+-rw-r--r-- 1 shiqbal 1049089 130 Oct 19 20:03 config
+-rw-r--r-- 1 shiqbal 1049089  73 Oct 19 20:03 description
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 hooks/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 objects/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 refs/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cat HEAD
+ref: refs/heads/master
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cat config
+[core]
+        repositoryformatversion = 0
+        filemode = false
+        bare = false
+        logallrefupdates = true
+        symlinks = false
+        ignorecase = true
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cat description
+Unnamed repository; edit this file 'description' to name the repository.
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cd hooks
+
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/hooks (GIT_DIR!)
+$ ls -la
+total 53
+drwxr-xr-x 1 shiqbal 1049089    0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089    0 Oct 19 20:03 ../
+-rwxr-xr-x 1 shiqbal 1049089  478 Oct 19 20:03 applypatch-msg.sample*
+-rwxr-xr-x 1 shiqbal 1049089  896 Oct 19 20:03 commit-msg.sample*
+-rwxr-xr-x 1 shiqbal 1049089 4726 Oct 19 20:03 fsmonitor-watchman.sample*
+-rwxr-xr-x 1 shiqbal 1049089  189 Oct 19 20:03 post-update.sample*
+-rwxr-xr-x 1 shiqbal 1049089  424 Oct 19 20:03 pre-applypatch.sample*
+-rwxr-xr-x 1 shiqbal 1049089 1643 Oct 19 20:03 pre-commit.sample*
+-rwxr-xr-x 1 shiqbal 1049089  416 Oct 19 20:03 pre-merge-commit.sample*
+-rwxr-xr-x 1 shiqbal 1049089 1374 Oct 19 20:03 pre-push.sample*
+-rwxr-xr-x 1 shiqbal 1049089 4898 Oct 19 20:03 pre-rebase.sample*
+-rwxr-xr-x 1 shiqbal 1049089  544 Oct 19 20:03 pre-receive.sample*
+-rwxr-xr-x 1 shiqbal 1049089 1492 Oct 19 20:03 prepare-commit-msg.sample*
+-rwxr-xr-x 1 shiqbal 1049089 2783 Oct 19 20:03 push-to-checkout.sample*
+-rwxr-xr-x 1 shiqbal 1049089 3650 Oct 19 20:03 update.sample*
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cd info
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/info (GIT_DIR!)
+$ ls -la
+total 5
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 ../
+-rw-r--r-- 1 shiqbal 1049089 240 Oct 19 20:03 exclude
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/info (GIT_DIR!)
+$
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/info (GIT_DIR!)
+$ cd ..
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cd refs
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs (GIT_DIR!)
+$ ls -la
+total 4
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ../
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 heads/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 tags/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs (GIT_DIR!)
+$ cd head
+bash: cd: head: No such file or directory
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs (GIT_DIR!)
+$ cd heads
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs/heads (GIT_DIR!)
+$ ls -la
+total 0
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ../
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs/heads (GIT_DIR!)
+$ cd ..
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs (GIT_DIR!)
+$ cd tags
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs/tags (GIT_DIR!)
+$ ls -la
+total 0
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ../
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/refs/tags (GIT_DIR!)
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cd objects/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ ls -la
+total 4
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ../
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 pack/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ cd info
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/info (GIT_DIR!)
+$ ls -la
+total 0
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ../
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/info (GIT_DIR!)
+$ cd ..
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ cd pack/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/pack (GIT_DIR!)
+$ ls -la
+total 0
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ../
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ ls
+file1.txt  file2.txt
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        file1.txt
+        file2.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ git add --all
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ cd .git
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ git objects
+git: 'objects' is not a git command. See 'git --help'.
+
+The most similar commands are
+        fsck-objects
+        pack-objects
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cd objects
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ ls -la
+total 4
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 ../
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 65/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 7f/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 pack/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ ls -la
+total 4
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 ../
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 65/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 7f/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 pack/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ cd pack
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/pack (GIT_DIR!)
+$ ls -la
+total 0
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 ../
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/pack (GIT_DIR!)
+$ cd ..
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ cd info
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/info (GIT_DIR!)
+$ ls -la
+total 0
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 ../
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/info (GIT_DIR!)
+$ cd 65
+bash: cd: 65: No such file or directory
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/info (GIT_DIR!)
+$ cat 65
+cat: 65: No such file or directory
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects/info (GIT_DIR!)
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   file1.txt
+        new file:   file2.txt
+
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ git commit -m "Initial commit"
+[master (root-commit) d9660cf] Initial commit
+ 2 files changed, 2 insertions(+)
+ create mode 100644 file1.txt
+ create mode 100644 file2.txt
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project (master)
+$ cd .git
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ ls -la
+total 21
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:45 ./
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:30 ../
+-rw-r--r-- 1 shiqbal 1049089  15 Oct 19 20:45 COMMIT_EDITMSG
+-rw-r--r-- 1 shiqbal 1049089  23 Oct 19 20:03 HEAD
+-rw-r--r-- 1 shiqbal 1049089 130 Oct 19 20:03 config
+-rw-r--r-- 1 shiqbal 1049089  73 Oct 19 20:03 description
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 hooks/
+-rw-r--r-- 1 shiqbal 1049089 209 Oct 19 20:45 index
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:45 logs/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:45 objects/
+drwxr-xr-x 1 shiqbal 1049089   0 Oct 19 20:03 refs/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git (GIT_DIR!)
+$ cd objects
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+$ ls -la
+total 8
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:45 ./
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:45 ../
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:45 22/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 65/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:35 7f/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:45 d9/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 info/
+drwxr-xr-x 1 shiqbal 1049089 0 Oct 19 20:03 pack/
+
+shiqbal@N10422 MINGW64 /c/Shahid/learning/git/first-project/.git/objects (GIT_DIR!)
+
+
+Head Refer current branch
+analyse head sha by cat 
+pack file containsa object
+git pack
+cat filenme | git unpack-objects
+
+git diff
+
+git merge
+
+git checkput to brance where you want to merge
+the git merge
+git remote
+
+git remote -v origin
+
+git branch
+
+git branch -a
+origin default remote sever name
+git branch -r
+git remore show origin
+git remote pruned
+git pull ocally  git fetch + git merge
