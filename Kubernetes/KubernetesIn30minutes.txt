@@ -1,0 +1,2 @@
+https://tanzu.vmware.com/developer/guides/app-enhancements-spring-k8s/
+https://piotrminkowski.com/2019/12/20/microservices-with-spring-cloud-kubernetes/
